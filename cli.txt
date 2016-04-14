@@ -1,0 +1,24 @@
+pwd: Present Working Directory 
+hostname: Computer Name 
+mkdir: Creat Direectories 
+cd: Navigate through Direcotry 
+ls: List Directory 
+rmdir: Remove Directory 
+pushd: Push Directory 
+popd: Pop Directory 
+cp: Copy a File or Directory 
+mv: Move a File or Directory 
+less: Show few lines (Page) of a file 
+cat: Print Entire File on Terminal 
+xargs: Execute Arguments 
+find: Find Files 
+grep: Find What is Inside a File 
+man: Manual of a Command 
+apropos: Find What Man Page is appropriate  
+env: Environment Variables 
+echo: Print to terminal 
+export: Modify or Create a new environment variables 
+exit: Exit Shell 
+sudo: Super User do 
+chmod: change File permissions 
+chown: Changing Ownership 
