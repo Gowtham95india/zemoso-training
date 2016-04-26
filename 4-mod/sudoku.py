@@ -1,41 +1,36 @@
-f = open('_sudoku.txt', 'r')
-puzzle = {}
-count = 0
-answres = []
-temp_digits = []
-for _line in f.readlines():
-    if 'Grid' in _line:
-        puzzle[count] =  temp_digits
-        temp_digits = []
-        count += 1
-    else:
-        temp_digits.append([int(_letter) for _letter in _line.strip()])
+sudoku = ''
+total_sum = 0
 
-print len(puzzle)
+def same_row(i,j): return (i/9 == j/9)
+def same_col(i,j): return (i-j) % 9 == 0
+def same_block(i,j): return (i/27 == j/27 and i%9/3 == j%9/3)
 
-def getcolele(sud, cpos):
-   return [int(sud[l][cpos]) for l in range(10)]
+def r(a):
+  global total_sum
+  i = a.find('0')
+  if i == -1:
+    total_sum += int(a[:3])
+    print "[+] Toal sum so far: %s"%total_sum
 
-def getboxele(sud, row, cpos):
-    intpos = (row/3)*3
+  excluded_numbers = set()
+  for j in range(81):
+    if same_row(i,j) or same_col(i,j) or same_block(i,j):
+      excluded_numbers.add(a[j])
 
-for sudoku in puzzle.values():
-    for row in sudoku:
-        for blank in row:
+  for m in '123456789':
+    if m not in excluded_numbers:
+      # At this point, m is not excluded by any row, column, or block, so let's place it and recurse
+      r(a[:i]+m+a[i+1:])
 
 
-"""
-    for _n, _p in puzzle.iteritems():
-        boxed = {0:[], 1:[], 2:[]}
-        box = []
-        for _row in _p:
-            for _num in _row:
-                if _num != 0 and _p.index(_row) == 0:
-                    boxed[0].append(_num)
-                if _num !=0 and _p.index(_row) > 2:
-                   boxed[_row.index(_num)].append(_num)
-                if _row.index(_num) < 3 and _p.index(_row) < 3 and _num != 0: box.append(_num)
+file = open("_sudoku.txt", 'r')
 
-        print boxed, box
-        raw_input()
-"""
+for line  in file.readlines(): 
+    line = line.strip()
+    if 'Grid' not in line:
+        sudoku += line.strip()
+    elif 'Grid' in line:
+        if len(sudoku) == 81:
+            r(sudoku)
+            sudoku = ''
+        else: pass
