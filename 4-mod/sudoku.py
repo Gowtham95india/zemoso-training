@@ -10,7 +10,6 @@ def r(a):
   i = a.find('0')
   if i == -1:
     total_sum += int(a[:3])
-    print "[+] Toal sum so far: %s"%total_sum
 
   excluded_numbers = set()
   for j in range(81):
@@ -34,3 +33,4 @@ for line  in file.readlines():
             r(sudoku)
             sudoku = ''
         else: pass
+print total_sum
