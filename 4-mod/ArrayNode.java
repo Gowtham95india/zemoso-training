@@ -8,7 +8,7 @@ class SolveArray{
             count += 1;
             i = A[i];
         }
-        return count;
+        return ++count;
 
     }
 }
@@ -17,7 +17,7 @@ public class ArrayNode{
 
     public static void main(String[] args){
 
-       int[] arrayNodes = {1,3,4,4,-1};
+       int[] arrayNodes = {1,4,-1,3,2};
 
        SolveArray solveit = new SolveArray();
        int tmp = solveit.Solver(arrayNodes);
