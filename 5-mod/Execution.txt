@@ -1,0 +1,9 @@
+Step - 1 : Open command line and move to the folder where you extracted the file.
+
+Step - 2 : Execute all the commands in the same order as given in the pic.
+ 
+actual command is --> D:\folder> javac -d . filename.java
+
+Step - 3 : Run the program with the following command
+
+D:\folder> java gowtham/design/patterns/DesignPatterns
