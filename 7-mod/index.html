@@ -224,14 +224,14 @@
                 console.log("WHen loop exists");
                 cx = (leftmax[0]+rightmax[0])/2;
                 cy = (topmax[1] + bottommax[1])/2;
-                rad = Math.max.apply(null, [distance([cx,cy],leftmax),distance([cx,cy],rightmax), distance([cx,cy],topmax), distance([cx,cy],bottommax)]);
+                rad = Math.max.apply(null, [distances([cx,cy],leftmax),distances([cx,cy],rightmax), distances([cx,cy],topmax), distances([cx,cy],bottommax)]);
             }
 
             console.log("Before Radius is : "+rad);
 
             while(!is_incircle([cx,cy],points,rad)){
 
-                    rad = rad + 1;
+                    rad = rad + .1;
 
             }
 
