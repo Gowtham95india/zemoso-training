@@ -56,6 +56,24 @@
         return Math.sqrt((temx*temx) + (temy*temy))
     }
 
+    function Calcenter(A,B,C){
+
+        var yDelta_a = B[1] - A[1];
+        var xDelta_a = B[0] - A[0];
+        var yDelta_b = C[1] - B[1];
+        var xDelta_b = C[0] - B[0];
+
+        center = [];
+
+        var aSlope = yDelta_a / xDelta_a;
+        var bSlope = yDelta_b / xDelta_b;
+
+        center[0] = (aSlope*bSlope*(A[1] - C[1]) + bSlope*(A[0] + B[0]) - aSlope*(B[0]+C[0]) )/(2* (bSlope-aSlope) );
+        center[1] = -1*(center[0] - (A[0]+B[0])/2)/aSlope +  (A[1]+B[1])/2;
+        return center;
+
+    }
+
     function drawCircle(){
         leftmax = -1;
         rightmax = -1;
@@ -126,6 +144,9 @@
                     else if(pt[0] > bottommax[1]){
                         bottommax = pt;
                     }
+                    else{
+                        bottommax = pt;
+                    }
                 }
                 else{
                     bottommax = pt;
@@ -133,19 +154,142 @@
             }
         }
 
+
+
         console.log(leftmax, rightmax, topmax, bottommax);
 
-        cx = (leftmax[0] + rightmax[0])/2;
-        cy = (leftmax[1] + rightmax[1])/2;
-        center = [cx,cy];
+        if(points.length > 2){
 
-        leftrad = distances(center, leftmax);
-        rightrad = distances(center, rightmax);
-        toprad = distances(center, topmax);
-        bottomrad = distances(center, bottommax);
+            center1 = Calcenter(leftmax, rightmax, topmax);
+            center2 = Calcenter(leftmax, rightmax, bottommax);
+            center3 = Calcenter(leftmax, topmax, bottommax);
+            center4 = Calcenter(rightmax, topmax, bottommax);
 
-        rad = Math.max.apply(null, [leftrad, rightrad, toprad, bottomrad])
-        
+            console.log("Centers are : "+center1, center2, center3, center4);
+
+            lr = distances(leftmax, rightmax);
+            lt = distances(leftmax, topmax);
+            lb = distances(leftmax, bottommax);
+            rt = distances(rightmax, topmax);
+            rb = distances(rightmax, bottommax);
+            tb = distances(topmax, bottommax);
+
+            radarr = [];
+            cadarr = [];
+            
+            if (!isNaN(center1)){
+                rad1 = (lr*lt*rt)/Math.sqrt((lr+lt+rt)*(rt+lt-lr)*(rt+lr-lt)*(lt+lr-rt));
+                radarr.push(rad1);
+                cadarr.push(center1);
+            }
+            if (isNaN(center2)){
+                rad2 = (lr*rb*lb)/Math.sqrt((lr+lb+rb)*(lr+lb-rb)*(lr+rb-lb)*(lb+rb-lr));
+                radarr.push(rad2);
+                cadarr.push(center2);
+            }
+            if (!isNaN(center3)){
+                rad3 = (lt*lb*tb)/Math.sqrt((lt+lb+tb)*(lt+lb-tb)*(lt+tb-lb)*(tb+lb-lt))
+                radarr.push(rad3); 
+                cadarr.push(center3);
+            } 
+            if (!isNaN(center4)){ 
+                rad4 = (rt*rb*tb)/Math.sqrt((rt+rb+tb)*(rt+rb-tb)*(rt+tb-rb)*(tb+rb-rt))
+                radarr.push(rad4);
+                cadarr.push(center3);
+            }
+            
+            console.log(cadarr, radarr);
+
+            found = false;
+            cx = cadarr[0][0];
+            cy = cadarr[0][1];
+            rad = radarr[0];
+
+            while(found && radarr.length){
+                console.log(radarr + " rad length " + radarr.legnth);
+                minrad = Math.min.apply(null,radarr);
+                switch (minrad) {
+                    case radarr[0]:
+                        center1 = cadarr[0];
+                        tx = center1[0] - bottommax[0];
+                        ty = center1[1] - bottommax[1];
+                        if (((tx*tx)+(ty*ty))<=(radarr[0]*rad[0])){
+                            found = true;
+                            cx = center1[0];
+                            cy = center1[1];
+                            rad = radarr[0];
+                        }
+                        else {
+                            radarr = remove(radarr, radarr[0]);
+                            cadarr = remove(cadarr, cadarr[0]); 
+                        }
+                        break;
+                    case radarr[1]:
+                        center2 = cadarr[1];
+                        tx = center2[0] - topmax[0];
+                        ty = center2[0] - topmax[1];
+                        if (((tx*tx)+(ty*ty))<=(radarr[1]*radarr[1])){
+                            found = true;
+                            cx = center2[0];
+                            cy = center2[1];
+                            rad = radarr[1];
+                        }
+                        else{
+                            radarr = remove(radarr, radarr[1]);
+                            cadarr = remove(cadarr, cadarr[1]);
+                        }
+                        break;
+                    case radarr[2]: 
+                        center3 = cadarr[2];
+                        tx = center3[0] - rightmax[0];
+                        ty = center3[1] - rightmax[1];
+                        if(((tx*tx)+(ty*ty))<=(radarr[2]*radarr[2])){
+                            found = true;
+                            cx = center3[0];
+                            cy = center3[1];
+                            rad = radarr[2];
+                        }
+                        else{
+                            radarr = remove(radarr, radarr[2]);
+                            cadarr = remove(cadarr, cadarr[2]);
+                        }
+                        break;
+                    case radarr[3]:
+                        center4 = cadarr[4];
+                        tx = center4[0] - leftmax[0];
+                        ty = center4[1] - leftmax[1];
+                        if(((tx*tx)+(ty*ty))<=(radarr[3]*radarr[3])){
+                            found = true;
+                            cx = center4[0];
+                            cy = center4[1];
+                            rad = radarr[3];
+                        }
+                        else{
+                            radarr = remove(radarr, radarr[3]);
+                            cadarr = remove(cadarr, cadarr[3]);
+                        }
+                        break;
+                }
+            }
+
+
+            /* No longer use as distance checking is done in while loop
+
+            bd = distances(center1, bottommax);
+            td = distances(center2, topmax);
+            rd = distances(center3, rightmax);
+            ld = distances(center4, leftmax);
+
+            */
+
+            //rad = Math.max.apply(null, [leftrad, rightrad, toprad, bottomrad])
+        }
+        else{
+            cx = points[0][0];
+            cy = points[0][1];
+            rad = 15;
+        }
+
         console.log(cx, cy, rad, leftmax, rightmax, topmax, bottommax);
         $("#circle").remove();
         sv.innerHTML += '<circle id="circle" cx="'+cx+'" cy="'+cy+'" r="'+rad+'" fill-opacity="0.1" />';

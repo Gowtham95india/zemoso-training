@@ -1,0 +1,176 @@
+<!DOCTYPE Html>
+<html style="width:100%;height:100%;">
+<head>
+<title>Module 7</title>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+</head>
+<body style="width:100%;height:100%;margin:0;">
+<svg id="svgele" height="100%" width="100%">
+
+
+</svg>
+<script type="text/javascript">
+
+	// Warn if overriding existing method
+	if(Array.prototype.equals)
+	    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+	// attach the .equals method to Array's prototype to call it on any array
+	Array.prototype.equals = function (array) {
+	    // if the other array is a falsy value, return
+	    if (!array)
+		return false;
+
+	    // compare lengths - can save a lot of time 
+	    if (this.length != array.length)
+		return false;
+
+	    for (var i = 0, l=this.length; i < l; i++) {
+		// Check if we have nested arrays
+		if (this[i] instanceof Array && array[i] instanceof Array) {
+		    // recurse into the nested arrays
+		    if (!this[i].equals(array[i]))
+		        return false;       
+		}           
+		else if (this[i] != array[i]) { 
+		    // Warning - two different object instances will never be equal: {x:20} != {x:20}
+		    return false;   
+		}           
+	    }       
+	    return true;
+	}
+	// Hide method from for-in loops
+	Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+
+    function remove(ary, value){
+        tempary = [];
+        for (var val in ary){
+            if (!ary[val].equals(value)){
+                tempary.push(ary[val]);
+            }
+        }
+        return tempary;
+    }
+    function distances(p1,p2){
+        temx = p1[0] - p2[0];
+        temy = p1[1] - p2[1];
+        return Math.sqrt((temx*temx) + (temy*temy))
+    }
+
+    function drawCircle(){
+        leftmax = -1;
+        rightmax = -1;
+        topmax = -1;
+        bottommax = -1;
+
+        /*Should get points to get radius */
+        
+        for(var id in points){
+
+           var pt = points[id];
+
+            if (leftmax == -1 && rightmax == -1 && topmax == -1 && bottommax == -1){
+                leftmax = pt;
+                rightmax = pt;
+                topmax = pt;
+                bottommax = pt;
+            }
+
+            if (leftmax == -1 || pt[0] <= leftmax[0]){
+
+                if (leftmax != -1){
+                    if (pt[1] < leftmax[1]){
+                        leftmax = pt;
+                    }
+                    else if(pt[1] > leftmax[1]){
+                        leftmax = pt;
+                    }
+                }
+                else{
+                    leftmax = pt;
+                }
+            }
+            if (rightmax == -1 || pt[0] >=rightmax[0]){
+                
+                if (rightmax != -1){
+                    if (pt[1] < rightmax[1]){
+                        rightmax = pt;
+                    }
+                    else if(pt[1] > rightmax[1]){
+                        rightmax = pt;
+                    }
+                }
+                else{
+                    rightmax = pt;
+                }
+            } 
+            if (topmax == -1 || pt[1] <= topmax[1]){
+                
+                if (rightmax != -1){
+                    if (pt[0] < topmax[0]){
+                        topmax = pt;
+                    }
+                    else if(pt[0] > topmax[0]){
+                        topmax = pt;
+                    }
+                }
+                else{
+                    topmax = pt;
+                }
+            }
+            if (bottommax == -1 || pt[1] >= bottommax[1]){
+            
+                if (bottommax != -1){
+                    if (pt[0] < bottommax[0]){
+                        bottommax = pt;
+                    }
+                    else if(pt[0] > bottommax[1]){
+                        bottommax = pt;
+                    }
+                    else{
+                        bottommax = pt;
+                    }
+                }
+                else{
+                    bottommax = pt;
+                }
+            }
+        }
+
+        console.log(leftmax, rightmax, topmax, bottommax);
+
+        cx = (leftmax[0] + rightmax[0] + topmax[0] + bottommax[0])/4;
+        cy = (leftmax[1] + rightmax[1] + topmax[1] + bottommax[1])/4;
+        center = [cx,cy];
+
+        leftrad = distances(center, leftmax);
+        rightrad = distances(center, rightmax);
+        toprad = distances(center, topmax);
+        bottomrad = distances(center, bottommax);
+
+        rad = Math.max.apply(null, [leftrad, rightrad, toprad, bottomrad])
+        
+        console.log(cx, cy, rad, leftmax, rightmax, topmax, bottommax);
+        $("#circle").remove();
+        sv.innerHTML += '<circle id="circle" cx="'+cx+'" cy="'+cy+'" r="'+rad+'" fill-opacity="0.1" />';
+    
+    }
+    var points = [];
+    var sv = document.getElementById('svgele');
+    $(sv).on("click", function(e){
+        temparr = [e.pageX, e.pageY];
+        
+        if($('#cir'+e.pageX+e.pageY).length){
+            $('#cir'+e.pageX+e.pageY).remove()
+            console.log(points);
+            points = remove(points, temparr);
+            console.log(points);
+        }
+        else{
+        points.push(temparr);
+        sv.innerHTML += '<circle id="cir'+e.pageX+e.pageY+'" cx="'+e.pageX+'" cy="'+e.pageY+'" r="4" fill="black" />';
+        }
+        drawCircle();
+});
+</script>
+</body>
+</html>
