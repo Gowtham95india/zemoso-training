@@ -51,9 +51,8 @@
         return tempary;
     }
     function distances(p1,p2){
-        temx = p1[0] - p2[0];
-        temy = p1[1] - p2[1];
-        return Math.sqrt((temx*temx) + (temy*temy))
+
+
     }
 
     function drawCircle(){
@@ -61,91 +60,19 @@
         rightmax = -1;
         topmax = -1;
         bottommax = -1;
-
-        /*Should get points to get radius */
-        
-        for(var id in points){
-
-           var pt = points[id];
-
-            if (leftmax == -1 && rightmax == -1 && topmax == -1 && bottommax == -1){
-                leftmax = pt;
-                rightmax = pt;
-                topmax = pt;
-                bottommax = pt;
-            }
-
-            if (leftmax == -1 || pt[0] <= leftmax[0]){
-
-                if (leftmax != -1){
-                    if (pt[1] < leftmax[1]){
-                        leftmax = pt;
-                    }
-                    else if(pt[1] > leftmax[1]){
-                        leftmax = pt;
-                    }
-                }
-                else{
-                    leftmax = pt;
-                }
-            }
-            if (rightmax == -1 || pt[0] >=rightmax[0]){
-                
-                if (rightmax != -1){
-                    if (pt[1] < rightmax[1]){
-                        rightmax = pt;
-                    }
-                    else if(pt[1] > rightmax[1]){
-                        rightmax = pt;
-                    }
-                }
-                else{
-                    rightmax = pt;
-                }
-            } 
-            if (topmax == -1 || pt[1] <= topmax[1]){
-                
-                if (rightmax != -1){
-                    if (pt[0] < topmax[0]){
-                        topmax = pt;
-                    }
-                    else if(pt[0] > topmax[0]){
-                        topmax = pt;
-                    }
-                }
-                else{
-                    topmax = pt;
-                }
-            }
-            if (bottommax == -1 || pt[1] >= bottommax[1]){
-            
-                if (bottommax != -1){
-                    if (pt[0] < bottommax[0]){
-                        bottommax = pt;
-                    }
-                    else if(pt[0] > bottommax[1]){
-                        bottommax = pt;
-                    }
-                }
-                else{
-                    bottommax = pt;
-                }
-            }
+        x_pts = [];
+        y_pts = [];
+        for(var point in points){
+            x_pts.push(points[point][0]);
+            y_pts.push(points[point][1]);
         }
-
-        console.log(leftmax, rightmax, topmax, bottommax);
-
-        cx = (leftmax[0] + rightmax[0])/2;
-        cy = (leftmax[1] + rightmax[1])/2;
-        center = [cx,cy];
-
-        leftrad = distances(center, leftmax);
-        rightrad = distances(center, rightmax);
-        toprad = distances(center, topmax);
-        bottomrad = distances(center, bottommax);
-
-        rad = Math.max.apply(null, [leftrad, rightrad, toprad, bottomrad])
-        
+        leftmax = Math.min.apply(null, x_pts);
+        rightmax = Math.max.apply(null, x_pts);
+        topmax = Math.min.apply(null, y_pts);
+        bottommax = Math.max.apply(null, y_pts);
+        cx = (leftmax + rightmax)/2;
+        cy = (topmax + bottommax)/2;
+        rad = Math.sqrt(((cx-leftmax)*(cx-leftmax))+((cy-topmax)*(cy-topmax)));
         console.log(cx, cy, rad, leftmax, rightmax, topmax, bottommax);
         $("#circle").remove();
         sv.innerHTML += '<circle id="circle" cx="'+cx+'" cy="'+cy+'" r="'+rad+'" fill-opacity="0.1" />';

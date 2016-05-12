@@ -75,59 +75,17 @@
                 bottommax = pt;
             }
 
-            if (leftmax == -1 || pt[0] <= leftmax[0]){
-
-                if (leftmax != -1){
-                    if (pt[1] < leftmax[1]){
-                        leftmax = pt;
-                    }
-                    else if(pt[1] > leftmax[1]){
-                        leftmax = pt;
-                    }
-                }
-                else{
+            else{
+                if (pt[0] < leftmax[0]){
                     leftmax = pt;
                 }
-            }
-            if (rightmax == -1 || pt[0] >=rightmax[0]){
-                
-                if (rightmax != -1){
-                    if (pt[1] < rightmax[1]){
-                        rightmax = pt;
-                    }
-                    else if(pt[1] > rightmax[1]){
-                        rightmax = pt;
-                    }
-                }
-                else{
+                if (pt[0] > rightmax[0]){
                     rightmax = pt;
                 }
-            } 
-            if (topmax == -1 || pt[1] <= topmax[1]){
-                
-                if (rightmax != -1){
-                    if (pt[0] < topmax[0]){
-                        topmax = pt;
-                    }
-                    else if(pt[0] > topmax[0]){
-                        topmax = pt;
-                    }
-                }
-                else{
+                if (pt[1] < topmax[1]){
                     topmax = pt;
                 }
-            }
-            if (bottommax == -1 || pt[1] >= bottommax[1]){
-            
-                if (bottommax != -1){
-                    if (pt[0] < bottommax[0]){
-                        bottommax = pt;
-                    }
-                    else if(pt[0] > bottommax[1]){
-                        bottommax = pt;
-                    }
-                }
-                else{
+                if (pt[1] > bottommax[1]){
                     bottommax = pt;
                 }
             }
