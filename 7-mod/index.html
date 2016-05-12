@@ -73,6 +73,19 @@
         return center;
 
     }
+    
+    function is_incircle(c,p,r){
+        stat = true;
+        for(var pt in points){
+            tiedx = c[0]-points[pt][0];
+            tiedy = c[1]-points[pt][1];
+            if(((tiedx*tiedx)+(tiedy*tiedy))>=(r*r)){
+                stat = false;
+                break;
+            }
+        }
+        return stat;
+    }
 
     function drawCircle(){
         leftmax = -1;
@@ -201,9 +214,29 @@
             console.log(cadarr, radarr);
 
             found = false;
-            cx = cadarr[0][0];
-            cy = cadarr[0][1];
-            rad = radarr[0];
+            if (cadarr.length > 0 && !isNaN(cadarr[0][0])){
+                cx = cadarr[0][0];
+                cy = cadarr[0][1];
+                rad = radarr[0];
+            }
+
+            else{
+                console.log("WHen loop exists");
+                cx = (leftmax[0]+rightmax[0])/2;
+                cy = (topmax[1] + bottommax[1])/2;
+                rad = Math.max.apply(null, [distance([cx,cy],leftmax),distance([cx,cy],rightmax), distance([cx,cy],topmax), distance([cx,cy],bottommax)]);
+            }
+
+            console.log("Before Radius is : "+rad);
+
+            while(!is_incircle([cx,cy],points,rad)){
+
+                    rad = rad + 1;
+
+            }
+
+
+            console.log("Corrected Radius is : "+rad);
 
             while(found && radarr.length){
                 console.log(radarr + " rad length " + radarr.legnth);
