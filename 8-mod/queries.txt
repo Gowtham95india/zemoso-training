@@ -1,0 +1,17 @@
+ SELECT * FROM population WHERE STATE IN  (SELECT STATE FROM accidents WHERE STATE NOT LIKE 'All %' ORDER BY TOTAL DESC LIMIT 3);
+
+
+SELECT STATE FROM ACCIDENTS WHERE STATE NOT LIKE 'All %'  ORDER BY TOTAL DESC LIMIT 3;
+
+
+CREATE TABLE population(
+    RANK numeric, 
+    STATE varchar, 
+    population numeric
+    )
+
+
+
+
+SELECT a.state, population/a.total FROM (SELECT total, state FROM accidents WHERE state <> 'All India' ORDER BY total DESC LIMIT 3) AS a INNER JOIN POPULATION on a.state = population.state;
+
